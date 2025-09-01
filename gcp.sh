@@ -54,13 +54,16 @@ create_vm() {
     read -p "Press Enter to continue..."
 }
 
-# ---------- Function: Create New Project ----------
+# ---------- Function: Create New Project (auto ID) ----------
 create_project() {
     echo -e "${YELLOW}Create a new GCP Project:${RESET}"
     read -p "Enter Project Name: " projname
 
-    # Auto-generate project ID: lowercase, replace spaces with hyphens
-    projid=$(echo "$projname" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+    # Auto-generate base project ID: lowercase, replace spaces with hyphens
+    baseid=$(echo "$projname" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+
+    # Add random 3-digit suffix to avoid ID clash
+    projid="${baseid}-$(shuf -i 100-999 -n 1)"
 
     gcloud projects create "$projid" --name="$projname" --set-as-default
 
