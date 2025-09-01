@@ -29,17 +29,18 @@ fresh_install() {
     read -p "Press Enter to continue..."
 }
 
-# ---------- Function: Create VM ----------
+# ---------- Function: Create VM (pre-filled defaults) ----------
 create_vm() {
     echo -e "${YELLOW}Create a new VM:${RESET}"
     read -p "Enter VM Name: " vmname
-    read -p "Enter Zone (e.g., asia-southeast1-b): " zone
-    read -p "Enter Disk Size in GB (e.g., 60): " disksize
-    read -p "Enter Machine Type (e.g., n2d-custom-4-20480): " mtype
-    read -p "Enter SSH Username: " sshuser
-    read -p "Enter SSH Public Key: " sshkey
+    read -p "Enter SSH Public Key (username:ssh-rsa ...): " sshkey
 
-    echo -e "${GREEN}Creating VM $vmname in zone $zone...${RESET}"
+    # Default values
+    zone="asia-southeast1-b"
+    mtype="n2d-custom-4-20480"
+    disksize="60"
+
+    echo -e "${GREEN}Creating VM $vmname in zone $zone with default settings...${RESET}"
     gcloud compute instances create $vmname \
         --zone=$zone \
         --machine-type=$mtype \
@@ -47,7 +48,7 @@ create_vm() {
         --image-project=ubuntu-os-cloud \
         --boot-disk-size=${disksize}GB \
         --boot-disk-type=pd-balanced \
-        --metadata ssh-keys="$sshuser:$sshkey"
+        --metadata ssh-keys="$sshkey"
 
     echo -e "${GREEN}VM $vmname created successfully!${RESET}"
     read -p "Press Enter to continue..."
@@ -63,7 +64,7 @@ while true; do
     echo "4) List VMs"
     echo "5) Show SSH Keys Metadata"
     echo "6) Show Entire SSH Key for a VM"
-    echo "7) Create VM"
+    echo "7) Create VM (pre-filled defaults)"
     echo "8) Exit"
     echo
     read -p "Choose an option [1-8]: " choice
