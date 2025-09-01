@@ -5,7 +5,18 @@ RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
 CYAN="\e[36m"
+BOLD='\033[1m'
 RESET="\e[0m"
+
+# ---------- Function: Header with new design ----------
+print_header() {
+    clear
+    echo -e "${YELLOW}${BOLD}=====================================================${RESET}"
+    echo -e "${YELLOW}${BOLD}      🌟 GOOGLE GCP VM CREATOR 🌟      ${RESET}"
+    echo -e "${YELLOW}${BOLD}      # # # # # MADE BY PRODI # # # # #      ${RESET}"
+    echo -e "${YELLOW}${BOLD}=====================================================${RESET}"
+    echo ""
+}
 
 # ---------- Function: Fresh Install + CLI Setup ----------
 fresh_install() {
@@ -75,18 +86,21 @@ create_project() {
 
 # ---------- Main Menu ----------
 while true; do
-    clear
-    echo -e "${CYAN}===== GCP CLI ONE-CLICK MENU =====${RESET}"
-    echo "1) Fresh Install + CLI Setup"
-    echo "2) Change Google Account"
-    echo "3) Create New Project"
-    echo "4) Switch Project"
-    echo "5) List VMs"
-    echo "6) Show SSH Keys Metadata"
-    echo "7) Show Entire SSH Key for a VM"
-    echo "8) Create VM (pre-filled defaults)"
-    echo "9) Exit"
-    echo
+    print_header
+    echo -e "${YELLOW}${BOLD}╔══════════════════════════════════════════════╗${RESET}"
+    echo -e "${YELLOW}${BOLD}║      GCP CLI ONE-CLICK MENU      ║${RESET}"
+    echo -e "${YELLOW}${BOLD}╠══════════════════════════════════════════════╣${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}1${YELLOW}${BOLD}] ${RESET}Fresh Install + CLI Setup               ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}2${YELLOW}${BOLD}] ${RESET}Change Google Account                   ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}3${YELLOW}${BOLD}] ${RESET}Create New Project                      ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}4${YELLOW}${BOLD}] ${RESET}Switch Project                          ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}5${YELLOW}${BOLD}] ${RESET}List VMs                                ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}6${YELLOW}${BOLD}] ${RESET}Show SSH Keys Metadata                  ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}7${YELLOW}${BOLD}] ${RESET}Show Entire SSH Key for a VM            ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}8${YELLOW}${BOLD}] ${RESET}Create VM (pre-filled defaults)         ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}║ [${CYAN}9${YELLOW}${BOLD}] ${RESET}Exit                                    ${YELLOW}${BOLD}║${RESET}"
+    echo -e "${YELLOW}${BOLD}╚══════════════════════════════════════════════╝${RESET}"
+    echo ""
     read -p "Choose an option [1-9]: " choice
 
     case $choice in
