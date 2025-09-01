@@ -54,20 +54,37 @@ create_vm() {
     read -p "Press Enter to continue..."
 }
 
+# ---------- Function: Create New Project ----------
+create_project() {
+    echo -e "${YELLOW}Create a new GCP Project:${RESET}"
+    read -p "Enter Project Name: " projname
+
+    # Auto-generate project ID: lowercase, replace spaces with hyphens
+    projid=$(echo "$projname" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+
+    gcloud projects create "$projid" --name="$projname" --set-as-default
+
+    echo -e "${GREEN}Project created successfully!${RESET}"
+    echo "Project ID: $projid"
+    echo "Project Name: $projname"
+    read -p "Press Enter to continue..."
+}
+
 # ---------- Main Menu ----------
 while true; do
     clear
     echo -e "${CYAN}===== GCP CLI ONE-CLICK MENU =====${RESET}"
     echo "1) Fresh Install + CLI Setup"
     echo "2) Change Google Account"
-    echo "3) Switch Project"
-    echo "4) List VMs"
-    echo "5) Show SSH Keys Metadata"
-    echo "6) Show Entire SSH Key for a VM"
-    echo "7) Create VM (pre-filled defaults)"
-    echo "8) Exit"
+    echo "3) Create New Project"
+    echo "4) Switch Project"
+    echo "5) List VMs"
+    echo "6) Show SSH Keys Metadata"
+    echo "7) Show Entire SSH Key for a VM"
+    echo "8) Create VM (pre-filled defaults)"
+    echo "9) Exit"
     echo
-    read -p "Choose an option [1-8]: " choice
+    read -p "Choose an option [1-9]: " choice
 
     case $choice in
         1) fresh_install ;;
@@ -76,7 +93,8 @@ while true; do
             gcloud auth login
             read -p "Press Enter to continue..."
             ;;
-        3)
+        3) create_project ;;
+        4)
             echo -e "${YELLOW}Available Projects:${RESET}"
             gcloud projects list --format="table(projectId,name)"
             read -p "Enter PROJECT_ID to switch: " projid
@@ -84,17 +102,17 @@ while true; do
             echo -e "${GREEN}Project switched to $projid${RESET}"
             read -p "Press Enter to continue..."
             ;;
-        4)
+        5)
             echo -e "${YELLOW}Listing all VMs in current project:${RESET}"
             gcloud compute instances list --format="table(name,zone,machineType,STATUS,INTERNAL_IP,EXTERNAL_IP)"
             read -p "Press Enter to continue..."
             ;;
-        5)
+        6)
             echo -e "${YELLOW}SSH Keys Metadata:${RESET}"
             gcloud compute project-info describe --format="value(commonInstanceMetadata.items)"
             read -p "Press Enter to continue..."
             ;;
-        6)
+        7)
             echo -e "${YELLOW}Enter VM Name to show entire SSH Key:${RESET}"
             read -p "VM Name: " vmname
             zone=$(gcloud compute instances list --filter="name=$vmname" --format="value(zone)")
@@ -106,8 +124,8 @@ while true; do
             fi
             read -p "Press Enter to continue..."
             ;;
-        7) create_vm ;;
-        8)
+        8) create_vm ;;
+        9)
             echo -e "${RED}Exiting...${RESET}"
             exit 0
             ;;
