@@ -61,8 +61,6 @@ create_project() {
 
     # Auto-generate base project ID: lowercase, replace spaces with hyphens
     baseid=$(echo "$projname" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-
-    # Add random 3-digit suffix to avoid ID clash
     projid="${baseid}-$(shuf -i 100-999 -n 1)"
 
     gcloud projects create "$projid" --name="$projname" --set-as-default
@@ -70,6 +68,47 @@ create_project() {
     echo -e "${GREEN}Project created successfully!${RESET}"
     echo "Project ID: $projid"
     echo "Project Name: $projname"
+    read -p "Press Enter to continue..."
+}
+
+# ---------- Function: Delete VM (with disk) ----------
+delete_vm() {
+    echo -e "${YELLOW}Listing available VMs...${RESET}"
+    gcloud compute instances list --format="table(name,zone,status)"
+
+    read -p "Enter VM NAME to delete: " VM_NAME
+    read -p "Enter ZONE of the VM: " VM_ZONE
+
+    if [ -z "$VM_NAME" ] || [ -z "$VM_ZONE" ]; then
+        echo -e "${RED}VM Name or Zone missing!${RESET}"
+        read -p "Press Enter to continue..."
+        return
+    fi
+
+    echo -e "${CYAN}Deleting VM '$VM_NAME' and its boot disk in zone '$VM_ZONE'...${RESET}"
+    gcloud compute instances delete "$VM_NAME" --zone="$VM_ZONE" --quiet
+
+    echo -e "${GREEN}VM Deleted Successfully along with its disk!${RESET}"
+    read -p "Press Enter to continue..."
+}
+
+# ---------- Function: Check Free Trial Credit ----------
+check_credit() {
+    echo -e "${YELLOW}Checking Free Trial Credit (in USD)...${RESET}"
+
+    BILLING_ACCOUNT=$(gcloud beta billing accounts list --format="value(name)" --limit=1)
+    if [ -z "$BILLING_ACCOUNT" ]; then
+        echo -e "${RED}No billing account found!${RESET}"
+    else
+        CREDIT=$(gcloud beta billing accounts describe $BILLING_ACCOUNT \
+            --format="value(balance.amount)")
+
+        if [ -z "$CREDIT" ]; then
+            echo -e "${RED}Unable to fetch credit. Maybe free trial expired or no billing enabled.${RESET}"
+        else
+            echo -e "${GREEN}Your Free Trial Credit: $CREDIT USD${RESET}"
+        fi
+    fi
     read -p "Press Enter to continue..."
 }
 
@@ -85,9 +124,11 @@ while true; do
     echo "6) Show SSH Keys Metadata"
     echo "7) Show Entire SSH Key for a VM"
     echo "8) Create VM (pre-filled defaults)"
-    echo "9) Exit"
+    echo "9) Delete VM (with disk)"
+    echo "10) Check Free Trial Credit (USD)"
+    echo "11) Exit"
     echo
-    read -p "Choose an option [1-9]: " choice
+    read -p "Choose an option [1-11]: " choice
 
     case $choice in
         1) fresh_install ;;
@@ -128,7 +169,9 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
         8) create_vm ;;
-        9)
+        9) delete_vm ;;
+        10) check_credit ;;
+        11)
             echo -e "${RED}Exiting...${RESET}"
             exit 0
             ;;
