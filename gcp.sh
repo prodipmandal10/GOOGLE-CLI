@@ -5,42 +5,43 @@ RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
 CYAN="\e[36m"
+BOLD='\033[1m'
 RESET="\e[0m"
 
 # ---------- Function: Fresh Install + CLI Setup ----------
 fresh_install() {
-    echo -e "${CYAN}Running Fresh Install + CLI Setup...${RESET}"
+    echo -e "${CYAN}${BOLD}Running Fresh Install + CLI Setup...${RESET}"
     sudo apt update && sudo apt upgrade -y
     sudo apt install -y curl wget git unzip python3 python3-pip docker.io
     sudo systemctl enable docker --now
 
     if ! command -v gcloud &> /dev/null
     then
-        echo -e "${YELLOW}Gcloud CLI not found. Installing...${RESET}"
-        curl https://sdk.cloud.google.com | bash
+        echo -e "${YELLOW}${BOLD}Gcloud CLI not found. Installing...${RESET}"
+        curl https://sdk.cloud.com | bash
         exec -l $SHELL
     else
-        echo -e "${GREEN}Gcloud CLI already installed.${RESET}"
+        echo -e "${GREEN}${BOLD}Gcloud CLI already installed.${RESET}"
     fi
 
-    echo -e "${YELLOW}Now login to your Google Account:${RESET}"
+    echo -e "${YELLOW}${BOLD}Now login to your Google Account:${RESET}"
     gcloud auth login
-    echo -e "${GREEN}Setup complete!${RESET}"
+    echo -e "${GREEN}${BOLD}Setup complete!${RESET}"
     read -p "Press Enter to continue..."
 }
 
 # ---------- Function: Create VM (pre-filled defaults) ----------
 create_vm() {
-    echo -e "${YELLOW}Create a new VM:${RESET}"
+    echo -e "${YELLOW}${BOLD}Create a new VM:${RESET}"
     read -p "Enter VM Name: " vmname
     read -p "Enter SSH Public Key (username:ssh-rsa ...): " sshkey
 
     # Default values
     zone="asia-southeast1-b"
-    mtype="n2d-custom-4-20480"
+    mtype="n2d-custom-4-32768"  # 4 vCPU, 32GB RAM
     disksize="60"
 
-    echo -e "${GREEN}Creating VM $vmname in zone $zone with default settings...${RESET}"
+    echo -e "${GREEN}${BOLD}Creating VM $vmname in zone $zone with default settings...${RESET}"
     gcloud compute instances create $vmname \
         --zone=$zone \
         --machine-type=$mtype \
@@ -50,13 +51,13 @@ create_vm() {
         --boot-disk-type=pd-balanced \
         --metadata ssh-keys="$sshkey"
 
-    echo -e "${GREEN}VM $vmname created successfully!${RESET}"
+    echo -e "${GREEN}${BOLD}VM $vmname created successfully!${RESET}"
     read -p "Press Enter to continue..."
 }
 
 # ---------- Function: Create New Project (auto ID) ----------
 create_project() {
-    echo -e "${YELLOW}Create a new GCP Project:${RESET}"
+    echo -e "${YELLOW}${BOLD}Create a new GCP Project:${RESET}"
     read -p "Enter Project Name: " projname
 
     # Auto-generate base project ID: lowercase, replace spaces with hyphens
@@ -67,11 +68,11 @@ create_project() {
 
     gcloud projects create "$projid" --name="$projname" --set-as-default
 
-    echo -e "${GREEN}Project created successfully!${RESET}"
+    echo -e "${GREEN}${BOLD}Project created successfully!${RESET}"
     echo "Project ID: $projid"
     echo "Project Name: $projname"
 
-    echo -e "${YELLOW}Do you want to link a billing account now? (y/n):${RESET}"
+    echo -e "${YELLOW}${BOLD}Do you want to link a billing account now? (y/n):${RESET}"
     read choice
     if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
         link_billing $projid
@@ -82,37 +83,37 @@ create_project() {
 
 # ---------- Function: Switch Project ----------
 switch_project() {
-    echo -e "${YELLOW}Available Projects:${RESET}"
+    echo -e "${YELLOW}${BOLD}Available Projects:${RESET}"
     gcloud projects list --format="table(projectId,name)"
     read -p "Enter PROJECT_ID to switch: " projid
     gcloud config set project $projid
-    echo -e "${GREEN}Project switched to $projid${RESET}"
+    echo -e "${GREEN}${BOLD}Project switched to $projid${RESET}"
     read -p "Press Enter to continue..."
 }
 
 # ---------- Function: List VMs ----------
 list_vms() {
-    echo -e "${YELLOW}Listing all VMs in current project:${RESET}"
+    echo -e "${YELLOW}${BOLD}Listing all VMs in current project:${RESET}"
     gcloud compute instances list --format="table(name,zone,machineType,STATUS,INTERNAL_IP,EXTERNAL_IP)"
     read -p "Press Enter to continue..."
 }
 
 # ---------- Function: Show SSH Keys Metadata ----------
 show_ssh_metadata() {
-    echo -e "${YELLOW}SSH Keys Metadata:${RESET}"
+    echo -e "${YELLOW}${BOLD}SSH Keys Metadata:${RESET}"
     gcloud compute project-info describe --format="value(commonInstanceMetadata.items)"
     read -p "Press Enter to continue..."
 }
 
 # ---------- Function: Show Entire SSH Key ----------
 show_ssh_key() {
-    echo -e "${YELLOW}Enter VM Name to show entire SSH Key:${RESET}"
+    echo -e "${YELLOW}${BOLD}Enter VM Name to show entire SSH Key:${RESET}"
     read -p "VM Name: " vmname
     zone=$(gcloud compute instances list --filter="name=$vmname" --format="value(zone)")
     if [ -z "$zone" ]; then
-        echo -e "${RED}VM not found!${RESET}"
+        echo -e "${RED}${BOLD}VM not found!${RESET}"
     else
-        echo -e "${GREEN}SSH Key for $vmname:${RESET}"
+        echo -e "${GREEN}${BOLD}SSH Key for $vmname:${RESET}"
         gcloud compute instances describe $vmname --zone $zone --format="get(metadata.ssh-keys)"
     fi
     read -p "Press Enter to continue..."
@@ -120,7 +121,7 @@ show_ssh_key() {
 
 # ---------- Function: Show Billing Accounts ----------
 show_billing_accounts() {
-    echo -e "${YELLOW}Available Billing Accounts:${RESET}"
+    echo -e "${YELLOW}${BOLD}Available Billing Accounts:${RESET}"
     gcloud beta billing accounts list
     read -p "Press Enter to continue..."
 }
@@ -128,11 +129,11 @@ show_billing_accounts() {
 # ---------- Function: Link Billing to Project ----------
 link_billing() {
     project_id=$1
-    echo -e "${YELLOW}Link a billing account to project $project_id:${RESET}"
+    echo -e "${YELLOW}${BOLD}Link a billing account to project $project_id:${RESET}"
     gcloud beta billing accounts list --format="table(name,accountId)"
     read -p "Enter ACCOUNT_ID to link: " account_id
     gcloud beta billing projects link $project_id --billing-account $account_id
-    echo -e "${GREEN}Billing linked successfully!${RESET}"
+    echo -e "${GREEN}${BOLD}Billing linked successfully!${RESET}"
     read -p "Press Enter to continue..."
 }
 
@@ -141,17 +142,17 @@ delete_vm() {
     read -p "Enter VM Name to delete: " vmname
     zone=$(gcloud compute instances list --filter="name=$vmname" --format="value(zone)")
     if [ -z "$zone" ]; then
-        echo -e "${RED}VM not found!${RESET}"
+        echo -e "${RED}${BOLD}VM not found!${RESET}"
     else
         gcloud compute instances delete $vmname --zone $zone --quiet
-        echo -e "${GREEN}VM $vmname deleted successfully!${RESET}"
+        echo -e "${GREEN}${BOLD}VM $vmname deleted successfully!${RESET}"
     fi
     read -p "Press Enter to continue..."
 }
 
 # ---------- Function: Check Free Trial Credit ----------
 check_credit() {
-    echo -e "${YELLOW}Checking remaining Free Trial credit:${RESET}"
+    echo -e "${YELLOW}${BOLD}Checking remaining Free Trial credit:${RESET}"
     gcloud alpha billing accounts list --format="table(displayName,name,open,creditAmount,creditBalance)"
     read -p "Press Enter to continue..."
 }
@@ -159,19 +160,22 @@ check_credit() {
 # ---------- Main Menu ----------
 while true; do
     clear
-    echo -e "${CYAN}===== GCP CLI ONE-CLICK MENU =====${RESET}"
-    echo "1) Fresh Install + CLI Setup"
-    echo "2) Change Google Account"
-    echo "3) Create New Project"
-    echo "4) Switch Project"
-    echo "5) List VMs"
-    echo "6) Show SSH Keys Metadata"
-    echo "7) Show Entire SSH Key for a VM"
-    echo "8) Create VM (pre-filled defaults)"
-    echo "9) Delete VM"
-    echo "10) Show Billing Accounts / Link Billing"
-    echo "11) Check Free Trial Credit"
-    echo "12) Exit"
+    echo -e "${CYAN}${BOLD}=====================================================${RESET}"
+    echo -e "${CYAN}${BOLD}     GCP CLI BENGAL AIRDROP (MADE BY PRODIP)     ${RESET}"
+    echo -e "${CYAN}${BOLD}=====================================================${RESET}"
+    echo
+    echo -e "${YELLOW}${BOLD}🛠️ Fresh Install + CLI Setup${RESET}"
+    echo -e "${YELLOW}${BOLD}🔄 Change Google Account${RESET}"
+    echo -e "${YELLOW}${BOLD}📁 Create New Project${RESET}"
+    echo -e "${YELLOW}${BOLD}➡️ Switch Project${RESET}"
+    echo -e "${YELLOW}${BOLD}🖥️ List VMs${RESET}"
+    echo -e "${YELLOW}${BOLD}🔑 Show SSH Keys Metadata${RESET}"
+    echo -e "${YELLOW}${BOLD}🔍 Show Entire SSH Key for a VM${RESET}"
+    echo -e "${YELLOW}${BOLD}🚀 Create VM (pre-filled defaults)${RESET}"
+    echo -e "${YELLOW}${BOLD}🗑️ Delete VM${RESET}"
+    echo -e "${YELLOW}${BOLD}💰 Show Billing Accounts / Link Billing${RESET}"
+    echo -e "${YELLOW}${BOLD}💳 Check Free Trial Credit${RESET}"
+    echo -e "${YELLOW}${BOLD}🚪 Exit${RESET}"
     echo
     read -p "Choose an option [1-12]: " choice
 
