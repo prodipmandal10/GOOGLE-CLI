@@ -160,22 +160,22 @@ check_credit() {
 # ---------- Main Menu ----------
 while true; do
     clear
-    echo -e "${CYAN}${BOLD}=====================================================${RESET}"
-    echo -e "${CYAN}${BOLD}     GCP CLI BENGAL AIRDROP (MADE BY PRODIP)     ${RESET}"
-    echo -e "${CYAN}${BOLD}=====================================================${RESET}"
-    echo
-    echo -e "${YELLOW}${BOLD}🛠️ Fresh Install + CLI Setup${RESET}"
-    echo -e "${YELLOW}${BOLD}🔄 Change Google Account${RESET}"
-    echo -e "${YELLOW}${BOLD}📁 Create New Project${RESET}"
-    echo -e "${YELLOW}${BOLD}➡️ Switch Project${RESET}"
-    echo -e "${YELLOW}${BOLD}🖥️ List VMs${RESET}"
-    echo -e "${YELLOW}${BOLD}🔑 Show SSH Keys Metadata${RESET}"
-    echo -e "${YELLOW}${BOLD}🔍 Show Entire SSH Key for a VM${RESET}"
-    echo -e "${YELLOW}${BOLD}🚀 Create VM (pre-filled defaults)${RESET}"
-    echo -e "${YELLOW}${BOLD}🗑️ Delete VM${RESET}"
-    echo -e "${YELLOW}${BOLD}💰 Show Billing Accounts / Link Billing${RESET}"
-    echo -e "${YELLOW}${BOLD}💳 Check Free Trial Credit${RESET}"
-    echo -e "${YELLOW}${BOLD}🚪 Exit${RESET}"
+    echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
+    echo -e "${CYAN}${BOLD}|     GCP CLI BENGAL AIRDROP (MADE BY PRODIP)     |"
+    echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
+    echo -e "${YELLOW}${BOLD}| [1] 🛠️ Fresh Install + CLI Setup                   |"
+    echo -e "${YELLOW}${BOLD}| [2] 🔄 Change Google Account                        |"
+    echo -e "${YELLOW}${BOLD}| [3] 📁 Create New Project                           |"
+    echo -e "${YELLOW}${BOLD}| [4] ➡️ Switch Project                               |"
+    echo -e "${YELLOW}${BOLD}| [5] 🖥️ List VMs                                     |"
+    echo -e "${YELLOW}${BOLD}| [6] 🔑 Show SSH Keys Metadata                       |"
+    echo -e "${YELLOW}${BOLD}| [7] 🔍 Show Entire SSH Key for a VM                 |"
+    echo -e "${YELLOW}${BOLD}| [8] 🚀 Create VM (pre-filled defaults)              |"
+    echo -e "${YELLOW}${BOLD}| [9] 🗑️ Delete VM                                    |"
+    echo -e "${YELLOW}${BOLD}| [10] 💰 Show Billing Accounts / Link Billing       |"
+    echo -e "${YELLOW}${BOLD}| [11] 💳 Check Free Trial Credit                     |"
+    echo -e "${YELLOW}${BOLD}| [12] 🚪 Exit                                        |"
+    echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
     echo
     read -p "Choose an option [1-12]: " choice
 
