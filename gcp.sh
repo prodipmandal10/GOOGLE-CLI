@@ -38,7 +38,7 @@ create_vm() {
 
     # Default values
     zone="asia-southeast1-b"
-    mtype="n2d-custom-4-32768"  # 4 vCPU, 32GB RAM
+    mtype="n2d-custom-4-25600"  # 4 vCPU, 25GB RAM
     disksize="60"
 
     echo -e "${GREEN}${BOLD}Creating VM $vmname in zone $zone with default settings...${RESET}"
@@ -49,7 +49,8 @@ create_vm() {
         --image-project=ubuntu-os-cloud \
         --boot-disk-size=${disksize}GB \
         --boot-disk-type=pd-balanced \
-        --metadata ssh-keys="$sshkey"
+        --metadata ssh-keys="$sshkey" \
+        --tags=http-server,https-server   # HTTP & HTTPS traffic ON
 
     echo -e "${GREEN}${BOLD}VM $vmname created successfully!${RESET}"
     read -p "Press Enter to continue..."
@@ -60,10 +61,7 @@ create_project() {
     echo -e "${YELLOW}${BOLD}Create a new GCP Project:${RESET}"
     read -p "Enter Project Name: " projname
 
-    # Auto-generate base project ID: lowercase, replace spaces with hyphens
     baseid=$(echo "$projname" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-
-    # Add random 3-digit suffix to avoid ID clash
     projid="${baseid}-$(shuf -i 100-999 -n 1)"
 
     gcloud projects create "$projid" --name="$projname" --set-as-default
@@ -166,7 +164,7 @@ while true; do
     echo -e "${YELLOW}${BOLD}| [1] 🛠️ Fresh Install + CLI Setup                   |"
     echo -e "${YELLOW}${BOLD}| [2] 🔄 Change Google Account                        |"
     echo -e "${YELLOW}${BOLD}| [3] 📁 Create New Project                           |"
-    echo -e "${YELLOW}${BOLD}| [4] ➡️ Switch Project                               |"
+    echo -e "${YELLOW}${BOLD"| [4] ➡️ Switch Project                               |"
     echo -e "${YELLOW}${BOLD}| [5] 🖥️ List VMs                                     |"
     echo -e "${YELLOW}${BOLD}| [6] 🔑 Show SSH Keys Metadata                       |"
     echo -e "${YELLOW}${BOLD}| [7] 🔍 Show Entire SSH Key for a VM                 |"
