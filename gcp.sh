@@ -159,20 +159,20 @@ check_credit() {
 while true; do
     clear
     echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
-    echo -e "${CYAN}${BOLD}|     GCP CLI BENGAL AIRDROP (MADE BY PRODIP)     |"
+    echo -e "${CYAN}${BOLD}|     GCP CLI BENGAL AIRDROP (MADE BY PRODIP)       |"
     echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
     echo -e "${YELLOW}${BOLD}| [1] 🛠️ Fresh Install + CLI Setup                   |"
     echo -e "${YELLOW}${BOLD}| [2] 🔄 Change Google Account                        |"
-    echo -e "${YELLOW}${BOLD}| [3] 📁 Create New Project                           |"
-    echo -e "${YELLOW}${BOLD}| [4] ➡️ Switch Project                               |"
-    echo -e "${YELLOW}${BOLD}| [5] 🖥️ List VMs                                     |"
+    echo -e "${YELLOW}${BOLD}| [3] 📁 Create New Project                          |"
+    echo -e "${YELLOW}${BOLD}| [4] ➡️ Switch Project                             |"
+    echo -e "${YELLOW}${BOLD}| [5] 🖥️ List VMs                                   |"
     echo -e "${YELLOW}${BOLD}| [6] 🔑 Show SSH Keys Metadata                       |"
     echo -e "${YELLOW}${BOLD}| [7] 🔍 Show Entire SSH Key for a VM                 |"
-    echo -e "${YELLOW}${BOLD}| [8] 🚀 Create VM (pre-filled defaults)              |"
-    echo -e "${YELLOW}${BOLD}| [9] 🗑️ Delete VM                                    |"
+    echo -e "${YELLOW}${BOLD}| [8] 🚀 Create VM (pre-filled defaults)             |"
+    echo -e "${YELLOW}${BOLD}| [9] 🗑️ Delete VM                                  |"
     echo -e "${YELLOW}${BOLD}| [10] 💰 Show Billing Accounts / Link Billing       |"
-    echo -e "${YELLOW}${BOLD}| [11] 💳 Check Free Trial Credit                     |"
-    echo -e "${YELLOW}${BOLD"| [12] 🚪 Exit                                        |"
+    echo -e "${YELLOW}${BOLD}| [11] 💳 Check Free Trial Credit                    |"
+    echo -e "${YELLOW}${BOLD}| [12] 🚪 Exit                                       |"
     echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
     echo
     read -p "Choose an option [1-12]: " choice
