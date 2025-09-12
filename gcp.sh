@@ -172,10 +172,9 @@ while true; do
     echo -e "${YELLOW}${BOLD}| [9] 🗑️ Delete VM                                    |"
     echo -e "${YELLOW}${BOLD}| [10] 💰 Show Billing Accounts / Link Billing       |"
     echo -e "${YELLOW}${BOLD}| [11] 💳 Check Free Trial Credit                     |"
-    echo -e "${YELLOW}${BOLD}| [12] 🚪 Exit                                        |"
+    echo -e "${YELLOW}${BOLD"| [12] 🚪 Exit                                        |"
     echo -e "${CYAN}${BOLD}+---------------------------------------------------+"
     echo
-
     read -p "Choose an option [1-12]: " choice
 
     case $choice in
